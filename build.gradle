@@ -1,0 +1,23 @@
+plugins {
+  id 'application'
+  id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group = 'coal.utc'
+version = '1.0-SNAPSHOT'
+
+
+javafx {
+    version = "24.0.1"
+    modules = [ 'javafx.controls', 'javafx.media' ]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+mainClassName = 'coal.utc.FlappyBird'
