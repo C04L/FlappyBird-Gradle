@@ -1,6 +1,7 @@
 package coal.utc.GameObjects;
 
 
+import coal.utc.Controller.DatabaseController;
 import coal.utc.Controller.SoundController;
 import coal.utc.View.Renderer;
 import coal.utc.View.Sprite;
@@ -14,8 +15,11 @@ public class GameState {
     private Sprite[] activePipes;
     private int difficulty = 0;
     private SoundController sound = SoundController.getInstance();
+    private DatabaseController db = DatabaseController.getInstance();
 
-    private GameState() {}
+    private GameState() {
+        updateHighScoreFromDB();
+    }
 
     public static GameState getInstance() {
         if (instance == null) {
@@ -44,11 +48,16 @@ public class GameState {
         if (gameEnded) {
             sound.stopBackgroundMusic();
         }
+        if (score > 0) {
+            db.saveScore(score, difficulty);
+            updateHighScoreFromDB();
+        }
     }
 
     public int getScore() {
         return score;
     }
+
 
     public void setScore(int score) {
         this.score = score;
@@ -81,6 +90,7 @@ public class GameState {
         Renderer renderer = Renderer.getInstance();
         System.out.println("Difficulty set to: " + difficulty);
         this.difficulty = difficulty;
+        updateHighScoreFromDB();
         renderer.updateGameObjects(0);
     }
 
@@ -89,5 +99,10 @@ public class GameState {
         gameStarted = false;
         gameEnded = false;
         score = 0;
+        updateHighScoreFromDB();
+    }
+
+    private void updateHighScoreFromDB() {
+        this.highscore = db.getHighScore(difficulty);
     }
 }
